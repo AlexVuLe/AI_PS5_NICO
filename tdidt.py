@@ -37,7 +37,7 @@ class Node:
             C[y_value] += 1.
         for freq in C.values():
             if freq > 0:
-                self.entropy -= freq/self.T * math.log(freq/self.T)
+                self.entropy -= freq/self.T * math.log(freq/self.T, 2)
     
     def __split(self, x_name):
         values = self.attr_map[x_name]
@@ -55,11 +55,11 @@ class Node:
         return child_nodes
     
     def gain_info(self, x_name):
-        e_entropy = 0
+        Eentropy = 0
         child_nodes = self.__split(x_name)
         for child_node in child_nodes:
-            e_entropy -=  child_node.T/self.T * child_node.entropy
-        return self.entropy - e_entropy
+            Eentropy +=  child_node.T/self.T * child_node.entropy
+        return self.entropy - Eentropy
     
     def argmax_gain_info(self):
         argmax = None
