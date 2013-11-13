@@ -47,8 +47,11 @@ class arff:
                 attr_name = a[10:i_open_curly].replace(' ','')
                 self.attr_value_map[attr_name] = attr_values
                 self.attrs.append(attr_name)
-            
-        i_data = raw.index('@data')
+        
+        try:
+            i_data = raw.index('@data')
+        except ValueError:
+            i_data = raw.index('@data'.upper())
         obs = raw[i_data+1:]
         
         for o in obs:
