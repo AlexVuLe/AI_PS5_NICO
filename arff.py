@@ -47,4 +47,7 @@ class arff:
         for o in obs:
             o = o.replace(' ','')
             o = o.split(',')
-            self.data.append(o)
+            datapoint = {}
+            for a, v in zip(self.attrs, o):
+                datapoint[a] = v
+            self.data.append(datapoint)
