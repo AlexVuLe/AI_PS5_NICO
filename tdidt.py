@@ -27,9 +27,7 @@ class Node:
         
         self.entropy = 0
         self.__calc_entropy()
-        
-        self.split_on = self.argmax_gain_info()
-        
+                
     def __calc_entropy(self):
         C = {}
         for c in self.attr_map[self.y_name]:
@@ -38,7 +36,8 @@ class Node:
             y_value = o[self.y_name]
             C[y_value] += 1.
         for freq in C.values():
-            self.entropy -= freq/self.T * math.log(freq/self.T)
+            if freq > 0:
+                self.entropy -= freq/self.T * math.log(freq/self.T)
     
     def __split(self, x_name):
         values = self.attr_map[x_name]
@@ -50,13 +49,14 @@ class Node:
             split_data[d[x_name]].append(d) 
         for d in split_data.values():
             x_names = [name for name in self.x_names if name != x_name]
-            node = Node(d, self.y_name, x_names, self.attr_map)
-            child_nodes.append(node)
+            if len(d) > 0:
+                node = Node(d, self.y_name, x_names, self.attr_map)
+                child_nodes.append(node)
         return child_nodes
     
     def gain_info(self, x_name):
         e_entropy = 0
-        child_nodes = self.split_on(x_name)
+        child_nodes = self.__split(x_name)
         for child_node in child_nodes:
             e_entropy -=  child_node.T/self.T * child_node.entropy
         return self.entropy - e_entropy
@@ -71,9 +71,8 @@ class Node:
                 max_gain = tmp_gain
         return argmax
             
-
-    
-
+root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+root.argmax_gain_info()
     
 
 
