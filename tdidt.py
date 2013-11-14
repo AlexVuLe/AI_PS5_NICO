@@ -2,12 +2,17 @@
 Created on Nov 12, 2013
 
 @author: alex, nico
+The Node class automatically generates the tree when instantiated. Also 
+did extra credit number 2 where we have unknown variables. Did this section
+by finding the most common attribute that is in the same class and used this 
+attribute instead. 
+
+Input is the data file
 '''
 import sys
 import math
 from arff import arff
 
-# filename = sys.argv[1]
 
 class Node:
     
@@ -50,7 +55,7 @@ class Node:
                 self.entropy -= freq/self.T * math.log(freq/self.T, 2)
     
     # Creates a split in the current node by the given attribute name, and returns the children nodes
-    # Updates the node and children if build is true
+    # Updates the node and children if build is true. 
     def __split(self, x_name, build = True):
         values = self.attr_map[x_name]
         split_data = {}
@@ -60,7 +65,6 @@ class Node:
         # while most frequent al keeps track of the most frequent attribute, since on some cases,
         # there is an item that is the only classification
         most_frequent_y = {}
-
 
         for v in values:
             split_data[v] = []
