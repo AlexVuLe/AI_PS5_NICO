@@ -62,20 +62,20 @@ class Node:
             split_data[v] = []
         for d in self.data:
             split_data[d[x_name]].append(d) 
-        for v in split_data:
+        for v in values:
             d = split_data[v]
             x_names = [name for name in self.x_names if name != x_name]
-            if len(d) > 0:
-                node = Node(d, self.y_name, x_names, self.attr_map, 
-                            build, self.name + '->' + x_name + '=' + str(v))
-                child_nodes[v] = node
+            node = Node(d, self.y_name, x_names, self.attr_map, 
+                        build, self.name + '->' + x_name + '=' + str(v))
+            child_nodes[v] = node
         return child_nodes
     
     def __gain_info(self, x_name):
         Eentropy = 0
         child_nodes = self.__split(x_name, build = False)
         for child_node in child_nodes.values():
-            Eentropy +=  child_node.T/self.T * child_node.entropy
+            if child_node.entropy:
+                Eentropy +=  child_node.T/self.T * child_node.entropy
         return self.entropy - Eentropy
     
     def __argmax_gain_info(self):
@@ -103,10 +103,13 @@ class Node:
                 child = self.children[child_name]
                 child.print_tree()
         else:
-            print self.name[2:] + '->' + self.CLASS
+            print self.name[2:] + '->' + str(self.CLASS)
 
 root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
 root.print_tree()
+a = root.data[0]
+a['legs'] = '1'
+print root.classify(a)
     
 
 
