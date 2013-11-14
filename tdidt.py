@@ -28,9 +28,10 @@ class Node:
         self.entropy = 0
         self.__calc_entropy()
         
-        self.split_on = self.__argmax_gain_info()
+        self.split_on = None
         self.children = None
         if build and self.entropy:
+            self.split_on = self.__argmax_gain_info()
             print self.split_on
             self.children = self.__split(self.split_on)
         
