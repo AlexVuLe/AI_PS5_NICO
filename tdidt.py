@@ -9,13 +9,6 @@ from arff import arff
 
 # filename = sys.argv[1]
 
-def chdir():
-    import os
-    os.chdir('/Users/alex/Documents/workspace/classifier/')
-chdir()
-    
-arff_data = arff('Data/betterZoo.arff')
-
 class Node:
     
     def __init__(self, data, y_name, x_names, attr_map, 
@@ -61,6 +54,10 @@ class Node:
         for v in values:
             split_data[v] = []
         for d in self.data:
+            # Extra credit part 1, adding in continuous values
+            #if d[x_name] not in split_data:
+            #    split_data[d[x_name]] = [d]
+            #else:
             split_data[d[x_name]].append(d) 
         for v in values:
             d = split_data[v]
@@ -88,14 +85,16 @@ class Node:
                 max_gain = tmp_gain
         return argmax
     
-    def classify(self, datapoint):
+    def classify(self, datapoint, print_steps = True):
         if self.children:
             attr_value = datapoint[self.split_on]
-            print self.split_on, ':', attr_value
+            if print_steps: 
+                print self.split_on, ':', attr_value
             child = self.children[attr_value]
-            return child.classify(datapoint)
+            return child.classify(datapoint, print_steps)
         else:
-            print self.y_name, ':', self.CLASS
+            if print_steps: 
+                print self.y_name, ':', self.CLASS
             return self.CLASS
     
     def print_tree(self):
@@ -106,16 +105,32 @@ class Node:
         else:
             print self.name[2:] + '->' + str(self.CLASS)
 
-root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+def main(arff_file):
+    arff_data = arff(arff_file)
+    root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+    
+    print '\nTree'
+    root.print_tree()
+    
+    print '\nCLASSIFY: For the first item in the data set'
+    a = root.data[0]
+    a_class = root.classify(a, True)
+    print 'final result:', a_class    
+    
+    print '\nCROSS VALIDATION: Percent Correct'
+    number_correct = 0.
+    for data_point in arff_data.data:
+        arff_data_copy = list(arff_data.data)
+        arff_data_copy.remove(data_point)
+        current_root = Node(arff_data_copy, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)        
+        current_class = current_root.classify(data_point, False)
+        if data_point[arff_data.y_name] == current_class:
+            number_correct += 1.
+            
+    number_data_points = len(arff_data.data)
+    print number_correct/number_data_points
 
-print '\nTree'
-root.print_tree()
 
-print '\nCLASSIFY'
-a = root.data[0]
-a_class = root.classify(a)
-print 'final result:', a_class    
-
-
-
+if __name__ == '__main__':
+    main(sys.argv[1:][0])
 

@@ -35,7 +35,7 @@ class arff:
             i_real = a.find('real')
             if i_real != -1:
                 attr_name = a[10:i_real].replace(' ','')
-                attr_value = 'real'
+                attr_value = ['real']
                 self.attr_value_map[attr_name] = attr_value
                 self.attrs.append(attr_name)
             else:
