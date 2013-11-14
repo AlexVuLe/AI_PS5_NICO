@@ -18,7 +18,9 @@ arff_data = arff('Data/betterZoo.arff')
 
 class Node:
     
-    def __init__(self, data, y_name, x_names, attr_map, build = True):
+    def __init__(self, data, y_name, x_names, attr_map, 
+                 build = True, name = ''):
+        self.name = name
         self.data = data
         self.y_name = y_name
         self.x_names = x_names
@@ -35,13 +37,12 @@ class Node:
         self.children = None
         if build and self.entropy:
             self.split_on = self.__argmax_gain_info()
-            print self.split_on
             self.children = self.__split(self.split_on)
         
         self.CLASS = None
         if self.entropy == 0:
             self.CLASS = self.data[0][self.y_name]
-                
+    
     def __calc_entropy(self):
         C = {}
         for c in self.attr_map[self.y_name]:
@@ -65,7 +66,8 @@ class Node:
             d = split_data[v]
             x_names = [name for name in self.x_names if name != x_name]
             if len(d) > 0:
-                node = Node(d, self.y_name, x_names, self.attr_map, build)
+                node = Node(d, self.y_name, x_names, self.attr_map, 
+                            build, self.name + '->' + x_name + '=' + str(v))
                 child_nodes[v] = node
         return child_nodes
     
@@ -94,10 +96,17 @@ class Node:
             child.classify(datapoint)
         else:
             print self.y_name, ':', self.CLASS
-        
-        
-root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+    
+    def print_tree(self):
+        if self.children:
+            for child_name in self.children:
+                child = self.children[child_name]
+                child.print_tree()
+        else:
+            print self.name[2:] + '->' + self.CLASS
 
+root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+root.print_tree()
     
 
 
