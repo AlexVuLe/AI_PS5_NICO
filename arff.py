@@ -1,7 +1,7 @@
 '''
 Created on Nov 12, 2013
 
-@author: alex
+@author: alex, nico
 '''
 class arff:
     
