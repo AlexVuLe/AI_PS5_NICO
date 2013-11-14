@@ -25,8 +25,11 @@ class Node:
         self.attr_map = attr_map
         self.T = float(len(data))
         
-        self.entropy = 0
-        self.__calc_entropy()
+        if self.T:
+            self.entropy = 0
+            self.__calc_entropy()
+        else:
+            self.entropy = None
         
         self.split_on = None
         self.children = None
