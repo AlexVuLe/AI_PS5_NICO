@@ -93,9 +93,10 @@ class Node:
             attr_value = datapoint[self.split_on]
             print self.split_on, ':', attr_value
             child = self.children[attr_value]
-            child.classify(datapoint)
+            return child.classify(datapoint)
         else:
             print self.y_name, ':', self.CLASS
+            return self.CLASS
     
     def print_tree(self):
         if self.children:
@@ -106,11 +107,14 @@ class Node:
             print self.name[2:] + '->' + str(self.CLASS)
 
 root = Node(arff_data.data, arff_data.y_name, arff_data.x_names, arff_data.attr_value_map)
+
+print '\nTree'
 root.print_tree()
+
+print '\nCLASSIFY'
 a = root.data[0]
-a['legs'] = '1'
-print root.classify(a)
-    
+a_class = root.classify(a)
+print 'final result:', a_class    
 
 
 
