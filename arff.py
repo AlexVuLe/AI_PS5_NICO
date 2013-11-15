@@ -35,6 +35,7 @@ class arff:
             i_real = a.find('real')
             if i_real != -1:
                 attr_name = a[10:i_real].replace(' ','')
+                attr_name = attr_name.replace('\t', '')
                 attr_value = ['real']
                 self.attr_value_map[attr_name] = attr_value
                 self.attrs.append(attr_name)
@@ -45,6 +46,7 @@ class arff:
                 attr_values = attr_values.replace(' ', '')
                 attr_values = set(attr_values.split(','))
                 attr_name = a[10:i_open_curly].replace(' ','')
+                attr_name = attr_name.replace('\t', '')
                 self.attr_value_map[attr_name] = attr_values
                 self.attrs.append(attr_name)
         
