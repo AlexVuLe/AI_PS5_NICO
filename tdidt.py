@@ -77,7 +77,7 @@ class Node:
                 most_frequent_y[d[self.y_name]].append(d[x_name])
                     
         for d in self.data:
-            # If this is an unkown attribute
+            # If this is an unknown attribute
             if d[x_name] == '?':
                 max_frequency_x = 0
                 max_x = None
